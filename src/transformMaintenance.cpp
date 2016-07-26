@@ -215,13 +215,13 @@ int main(int argc, char** argv)
 
   ros::Publisher pubLaserOdometry2 = nh.advertise<nav_msgs::Odometry> ("/cam_to_init_2", 5);
   pubLaserOdometry2Pointer = &pubLaserOdometry2;
-  laserOdometry2.header.frame_id = "/camera_init_2";
-  laserOdometry2.child_frame_id = "/camera";
+  laserOdometry2.header.frame_id = "/map";
+  laserOdometry2.child_frame_id = "/BODY";
 
   tf::TransformBroadcaster tfBroadcaster2;
   tfBroadcaster2Pointer = &tfBroadcaster2;
-  laserOdometryTrans2.frame_id_ = "/camera_init_2";
-  laserOdometryTrans2.child_frame_id_ = "/camera";
+  laserOdometryTrans2.frame_id_ = "/map";
+  laserOdometryTrans2.child_frame_id_ = "/BODY";
 
   ros::spin();
 

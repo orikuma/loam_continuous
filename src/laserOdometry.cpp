@@ -489,13 +489,13 @@ int main(int argc, char** argv)
 
   ros::Publisher pubLaserOdometry = nh.advertise<nav_msgs::Odometry> ("/cam_to_init", 5);
   nav_msgs::Odometry laserOdometry;
-  laserOdometry.header.frame_id = "/camera_init";
-  laserOdometry.child_frame_id = "/camera";
+  laserOdometry.header.frame_id = "/odom";
+  laserOdometry.child_frame_id = "/BODY";
 
   tf::TransformBroadcaster tfBroadcaster;
   tf::StampedTransform laserOdometryTrans;
-  laserOdometryTrans.frame_id_ = "/camera_init";
-  laserOdometryTrans.child_frame_id_ = "/camera";
+  laserOdometryTrans.frame_id_ = "/odom";
+  laserOdometryTrans.child_frame_id_ = "/BODY";
 
   std::vector<int> pointSearchInd; // vector holding the indeces of points, closest to the neigbour of i for line edge/surface patch
   std::vector<float> pointSearchSqDis; // vector holding the square distances of the selected points for line edge/surface patch
@@ -1075,37 +1075,37 @@ int main(int argc, char** argv)
       sensor_msgs::PointCloud2 pc12;
       pcl::toROSMsg(*laserCloudCornerPtr, pc12);
       pc12.header.stamp = ros::Time().fromSec(timeLaserCloudExtreCur);
-      pc12.header.frame_id = "/camera";
+      pc12.header.frame_id = "/BODY";
       pub1.publish(pc12);
 
       sensor_msgs::PointCloud2 pc22;
       pcl::toROSMsg(*laserCloudSurfPtr, pc22);
       pc22.header.stamp = ros::Time().fromSec(timeLaserCloudExtreCur);
-      pc22.header.frame_id = "/camera";
+      pc22.header.frame_id = "/BODY";
       pub2.publish(pc22);
 
       sensor_msgs::PointCloud2 pc32;
       pcl::toROSMsg(*laserCloudExtreSel, pc32);
       pc32.header.stamp = ros::Time().fromSec(timeLaserCloudExtreCur);
-      pc32.header.frame_id = "/camera";
+      pc32.header.frame_id = "/BODY";
       pub3.publish(pc32);
 
       sensor_msgs::PointCloud2 pc42;
       pcl::toROSMsg(*laserCloudExtreUnsel, pc42);
       pc42.header.stamp = ros::Time().fromSec(timeLaserCloudExtreCur);
-      pc42.header.frame_id = "/camera";
+      pc42.header.frame_id = "/BODY";
       pub4.publish(pc42);
 
       sensor_msgs::PointCloud2 pc52;
       pcl::toROSMsg(*laserCloudExtreProj, pc52);
       pc52.header.stamp = ros::Time().fromSec(timeLaserCloudExtreCur);
-      pc52.header.frame_id = "/camera";
+      pc52.header.frame_id = "/BODY";
       pub5.publish(pc52);
 
       sensor_msgs::PointCloud2 pc62;
       pcl::toROSMsg(*laserCloudSel, pc62);
       pc62.header.stamp = ros::Time().fromSec(timeLaserCloudExtreCur);
-      pc62.header.frame_id = "/camera";
+      pc62.header.frame_id = "/BODY";
       pub6.publish(pc62);
       // end debug
 
@@ -1159,7 +1159,7 @@ int main(int argc, char** argv)
         sensor_msgs::PointCloud2 laserCloudLast2;
         pcl::toROSMsg(*laserCloudCornerLast + *laserCloudSurfLast, laserCloudLast2);
         laserCloudLast2.header.stamp = ros::Time().fromSec(timeLaserCloudLast);
-        laserCloudLast2.header.frame_id = "/camera";
+        laserCloudLast2.header.frame_id = "/BODY";
         pubLaserCloudLast2.publish(laserCloudLast2);
 
       } else {
@@ -1197,7 +1197,7 @@ int main(int argc, char** argv)
 
       laserOdometryTrans.setRotation(tf::Quaternion(-geoQuat.y, -geoQuat.z, geoQuat.x, geoQuat.w));
       laserOdometryTrans.setOrigin(tf::Vector3(tx, ty, tz));
-      tfBroadcaster.sendTransform(laserOdometryTrans);
+      // tfBroadcaster.sendTransform(laserOdometryTrans);
 
       // ROS_INFO ("%f %f %f %f %f %f", transformSum[0], transformSum[1], transformSum[2], 
       //                                transformSum[3], transformSum[4], transformSum[5]);

@@ -35,7 +35,7 @@ void Scan2PointTranslator::scanCallback( const sensor_msgs::LaserScan::ConstPtr 
   try {
       if(!listener.waitForTransform(
           scan->header.frame_id,
-          "/base_link",
+          "/BODY",
           scan->header.stamp + ros::Duration().fromSec(scan->ranges.size()*scan->time_increment),
           ros::Duration(1.0))) {
           return;
@@ -47,7 +47,7 @@ void Scan2PointTranslator::scanCallback( const sensor_msgs::LaserScan::ConstPtr 
   }
    
   sensor_msgs::PointCloud2 cloud;
-  lp.transformLaserScanToPointCloud( "/base_link", *scan, cloud, listener);
+  lp.transformLaserScanToPointCloud( "/BODY", *scan, cloud, listener);
   point_cloud_publisher.publish(cloud);
 }
 
