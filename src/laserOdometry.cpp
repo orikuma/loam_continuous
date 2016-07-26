@@ -1197,7 +1197,7 @@ int main(int argc, char** argv)
 
       laserOdometryTrans.setRotation(tf::Quaternion(-geoQuat.y, -geoQuat.z, geoQuat.x, geoQuat.w));
       laserOdometryTrans.setOrigin(tf::Vector3(tx, ty, tz));
-      // tfBroadcaster.sendTransform(laserOdometryTrans);
+      tfBroadcaster.sendTransform(laserOdometryTrans); // comment-in this line
 
       // ROS_INFO ("%f %f %f %f %f %f", transformSum[0], transformSum[1], transformSum[2], 
       //                                transformSum[3], transformSum[4], transformSum[5]);
