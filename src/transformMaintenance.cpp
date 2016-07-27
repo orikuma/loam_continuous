@@ -228,8 +228,8 @@ int main(int argc, char** argv)
   ros::Publisher pubLaserOdometry2 = nh.advertise<nav_msgs::Odometry> ("/cam_to_init_2", 5);
   pubLaserOdometry2Pointer = &pubLaserOdometry2;
   laserOdometry2.header.frame_id = "/map";
-  // laserOdometry2.child_frame_id = "/BODY";
-  laserOdometry2.child_frame_id = "/biped_odom_particle";
+  laserOdometry2.child_frame_id = "/BODY";
+  // laserOdometry2.child_frame_id = "/biped_odom_particle";
 
   tf::TransformBroadcaster tfBroadcaster2;
   tfBroadcaster2Pointer = &tfBroadcaster2;
