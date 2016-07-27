@@ -1135,17 +1135,17 @@ int main(int argc, char** argv)
         PluginIMURotation(rx, ry, rz, imuPitchStartLast, imuYawStartLast, imuRollStartLast, 
                           imuPitchLast, imuYawLast, imuRollLast, rx, ry, rz);
 
-        int laserCloudCornerLastNum = laserCloudCornerLast->points.size();
-        for (int i = 0; i < laserCloudCornerLastNum; i++) {
-          TransformToEnd(&laserCloudCornerLast->points[i], &laserCloudCornerLast->points[i], 
-                         startTimeLast, startTimeCur);
-        }
+        // int laserCloudCornerLastNum = laserCloudCornerLast->points.size();
+        // for (int i = 0; i < laserCloudCornerLastNum; i++) {
+        //   TransformToEnd(&laserCloudCornerLast->points[i], &laserCloudCornerLast->points[i], 
+        //                  startTimeLast, startTimeCur);
+        // }
 
-        int laserCloudSurfLastNum = laserCloudSurfLast->points.size();
-        for (int i = 0; i < laserCloudSurfLastNum; i++) {
-          TransformToEnd(&laserCloudSurfLast->points[i], &laserCloudSurfLast->points[i], 
-                         startTimeLast, startTimeCur);
-        }
+        // int laserCloudSurfLastNum = laserCloudSurfLast->points.size();
+        // for (int i = 0; i < laserCloudSurfLastNum; i++) {
+        //   TransformToEnd(&laserCloudSurfLast->points[i], &laserCloudSurfLast->points[i], 
+        //                  startTimeLast, startTimeCur);
+        // }
 
         TransformReset();
 
