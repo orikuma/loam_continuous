@@ -302,7 +302,7 @@ int main(int argc, char** argv)
   while (status) {
     ros::spinOnce();
 
-    if (newLaserCloudLast && newLaserOdometry && fabs(timeLaserCloudLast - timeLaserOdometry) < 0.005) {
+    if (newLaserCloudLast && newLaserOdometry && fabs(timeLaserCloudLast - timeLaserOdometry) < 10.0) {
       newLaserCloudLast = false;
       newLaserOdometry = false;
 

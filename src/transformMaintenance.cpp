@@ -130,7 +130,10 @@ void transformAssociateToMap()
 void laserOdometryHandler(const nav_msgs::Odometry::ConstPtr& laserOdometry)
 {
   if (fabs(timeOdomBefMapped - timeOdomAftMapped) < 0.005) {
-
+    tf::Transform map2body, odom2body, map2odom;
+    odom2body.setOrigin(tf::Vector3(laserOdometry->pose.pose.position.x, laserOdometry->pose.pose.position.y, laserOdometry->pose.pose.position.z));
+    odom2body.setRotation(tf::Quaternion(laserOdometry->pose.pose.orientation.x, laserOdometry->pose.pose.orientation.y, laserOdometry->pose.pose.orientation.z, laserOdometry->pose.pose.orientation.w));
+    
     double roll, pitch, yaw;
     geometry_msgs::Quaternion geoQuat = laserOdometry->pose.pose.orientation;
     tf::Matrix3x3(tf::Quaternion(geoQuat.z, -geoQuat.x, -geoQuat.y, geoQuat.w)).getRPY(roll, pitch, yaw);
@@ -156,11 +159,20 @@ void laserOdometryHandler(const nav_msgs::Odometry::ConstPtr& laserOdometry)
     laserOdometry2.pose.pose.position.x = transformMapped[3];
     laserOdometry2.pose.pose.position.y = transformMapped[4];
     laserOdometry2.pose.pose.position.z = transformMapped[5];
-    pubLaserOdometry2Pointer->publish(laserOdometry2);
+    pubLaserOdometry2Pointer->publish(laserOdometry2); // map->body
+
+
+    map2body.setOrigin(tf::Vector3(transformMapped[3], transformMapped[4], transformMapped[5]));
+    map2body.setRotation(tf::Quaternion(-geoQuat.y, -geoQuat.z, geoQuat.x, geoQuat.w));
+
+    // map2body = map2odom * odom2body -> map2odom = map2body * odom2body^-1
+    map2odom = map2body * odom2body.inverse();
 
     laserOdometryTrans2.stamp_ = laserOdometry->header.stamp;
-    laserOdometryTrans2.setRotation(tf::Quaternion(-geoQuat.y, -geoQuat.z, geoQuat.x, geoQuat.w));
-    laserOdometryTrans2.setOrigin(tf::Vector3(transformMapped[3], transformMapped[4], transformMapped[5]));
+    // laserOdometryTrans2.setRotation(tf::Quaternion(-geoQuat.y, -geoQuat.z, geoQuat.x, geoQuat.w));
+    // laserOdometryTrans2.setOrigin(tf::Vector3(transformMapped[3], transformMapped[4], transformMapped[5]));
+    laserOdometryTrans2.setRotation(map2odom.getRotation());
+    laserOdometryTrans2.setOrigin(map2odom.getOrigin());
     tfBroadcaster2Pointer->sendTransform(laserOdometryTrans2);
   }
 }
@@ -216,13 +228,14 @@ int main(int argc, char** argv)
   ros::Publisher pubLaserOdometry2 = nh.advertise<nav_msgs::Odometry> ("/cam_to_init_2", 5);
   pubLaserOdometry2Pointer = &pubLaserOdometry2;
   laserOdometry2.header.frame_id = "/map";
-  laserOdometry2.child_frame_id = "/BODY";
+  // laserOdometry2.child_frame_id = "/BODY";
+  laserOdometry2.child_frame_id = "/biped_odom_particle";
 
   tf::TransformBroadcaster tfBroadcaster2;
   tfBroadcaster2Pointer = &tfBroadcaster2;
   laserOdometryTrans2.frame_id_ = "/map";
-  laserOdometryTrans2.child_frame_id_ = "/BODY";
-
+  // laserOdometryTrans2.child_frame_id_ = "/BODY";
+  laserOdometryTrans2.child_frame_id_ = "/biped_odom_particle";
   ros::spin();
 
 
